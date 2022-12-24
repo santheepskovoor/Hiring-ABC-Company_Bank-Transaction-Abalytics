@@ -1,0 +1,189 @@
+--Q1---TASK1
+create database shopping;
+use database shopping;
+create table shopping_history(product varchar (100) not null,
+                             quantity int not null,
+                              unit_price int not null
+                             );
+
+select * from shopping_history;
+
+
+insert into shopping_history values ('Sugar',1,50),
+                                    ('Rice', 10, 1200),
+                                    ('oil',1, 200),
+                                    ('Chilli',1,100),
+                                    ('Tomato',1,100),
+                                    ('Mango',1,260),
+                                    ('Rice',2,100),
+                                    ('Ginger',1,90),
+                                    ('Mint leaves',1,150),
+                                    ('Curry leaves',1,50);
+                                    
+ --Find the total amount of money spect for each product(Rows should be ordered in descending alphabetical, ordered by product) 
+ ;
+select product, sum(unit_price) as total from shopping_history group by product order by TOTAL Desc;
+
+---------------------------------------------************************-------------------------------------------------------------------
+--Q2--Task1
+ 
+create database phones;
+use phones;
+
+create table phones(Name varchar(100) not null unique,
+                    Phone_number int not null unique
+                    );
+create table calls (ID int not null,
+                    caller int not null,
+                    calee int not null,
+                    duration int not null,
+                    unique(id)
+                   );
+
+
+select * from phones;
+select * from calls;
+
+
+--Insert column value
+
+insert into phones values('Santheep', 8196719),
+                          ('Shibin', 8197819),
+                          ('Meenu', 8123281),
+                          ('Gagan', 8178819),
+                          ('Krish', 8199819),
+                          ('Sanjai', 8112519),
+                          ('Deepak', 8112319),
+                          ('varun', 81945695),
+                          ('Lakshmi', 8178919),
+                          ('Kishan', 8110919),
+                          ('george', 8342819),
+                          ('Jacob', 8902819),
+                          ('jithin', 9092819),
+                          ('Jiya', 9872819),
+                          ('Yash', 9122819),
+                          ('Deepak', 9542819),
+                          ('Joshi', 9482819);
+                          
+                          
+
+insert into calls values(25,8196719,9012140,16),
+                        (35,8197819,8012120,16),
+                        (27,8123281,8709212,67),
+                        (15,8178819,2012120,34),
+                        (29,8199819,2012120,25),
+                        (30,8112519,9012120,67),
+                        (34,8112319,7812120,12),
+                        (2,81945695,9312120,90),
+                        (44,8178919,9412120,34),
+                        (43,8110919,9512120,60),
+                        (20,8342819,9612170,15),
+                        (12,8902819,9812120,16),
+                        (14,9092819,9912140,22),
+                        (25,9872819,7712120,32),
+                        (46,9122819,6817120,56),
+                        (47,9542819,8912120,77),
+                        (48,9482819,5612120,99);
+                        
+--Client name details who talked atleast 50 minutes.Rows should be sorted alphabatically
+
+
+---Creating master table by join.
+
+create table ph_calls as
+select * from phones as p
+left join calls as c
+on p.PHONE_NUMBER = c.CALLER;
+
+--Finding the caller details 
+select * from ph_calls;
+
+select name, DURATION from ph_calls
+where DURATION>= 50 order by name;
+
+----------------------------------------------***************************-------------------------------------------------------
+--Q3-Task1--- Bank Transfer insights from a series of transaction
+
+create table transactions ( Amount int not null,
+                           Date_ date not null);
+
+insert into transactions(Amount,Date_) values( 1000, '2020-01-06');
+insert into transactions(Amount,Date_) values( -10, '2020-01-14');
+insert into transactions(Amount,Date_) values( -75, '2020-01-20');
+insert into transactions(Amount,Date_) values( -5, '2020-01-25');
+insert into transactions(Amount,Date_) values( -4, '2020-01-29');
+insert into transactions(Amount,Date_) values( 2000, '2020-03-10');
+insert into transactions(Amount,Date_) values( -75, '2020-03-12');
+insert into transactions(Amount,Date_) values( -20, '2020-03-15');
+insert into transactions(Amount,Date_) values( 40, '2020-03-15');
+insert into transactions(Amount,Date_) values( -50, '2020-03-15');
+insert into transactions(Amount,Date_) values( 200, '2020-10-10');
+insert into transactions(Amount,Date_) values( -200, '2020-10-10');
+
+select * from transactions;
+
+
+--Find the sum of transaction
+
+select sum(AMOUNT) as Balance_amount from transactions;
+
+--Find the balance in the account deducting the credit card payment of 5 INR every month except the Month March(No credit card fee for the month of march) :ie "11 month * 5 INR" deduct from total balance
+
+select sum(AMOUNT)-(11*5) as Balance_amount from transactions;
+
+--Q3-Task2
+create table transactions2 ( Amount int not null,
+                           Date_ date not null);
+
+insert into transactions2(Amount,Date_) values( 1, '2020-01-06');
+insert into transactions2(Amount,Date_) values( 35, '2020-01-14');
+insert into transactions2(Amount,Date_) values( -50, '2020-01-20');
+insert into transactions2(Amount,Date_) values( -1, '2020-01-25');
+insert into transactions2(Amount,Date_) values( -200, '2020-01-29');
+insert into transactions2(Amount,Date_) values( -44, '2020-03-10');
+insert into transactions2(Amount,Date_) values( -5, '2020-03-12');
+insert into transactions2(Amount,Date_) values( 1, '2020-03-15');
+insert into transactions2(Amount,Date_) values( 1, '2020-03-15');
+insert into transactions2(Amount,Date_) values( -100, '2020-03-15');
+insert into transactions2(Amount,Date_) values( -100, '2020-10-10');
+insert into transactions2(Amount,Date_) values( -100, '2020-10-10');
+
+drop table transactions2;
+
+select * from transactions2;
+
+--Current available balence
+
+select sum(Amount) as Total_balence from transactions2;
+
+--We can see from the data, there is no transaction fee for debit card  for the month Month of Feb & December from the transaction table 2.
+--So credit card fee 5 INR is applicable for 10 months only in the year 2020
+--Find the Total balence in account after the deduction of credi card for the month of March & December
+
+select Sum(Amount)-5*10 as Available_balence from transactions2;
+
+
+---Q3
+
+create table transactions3 (Amount int not null,
+                           Date_ date not null);
+
+insert into transactions3(Amount,Date_) values( 6000, '2020-04-03');
+insert into transactions3(Amount,Date_) values( 5000, '2020-04-02');
+insert into transactions3(Amount,Date_) values( 4000, '2020-04-01');
+insert into transactions3(Amount,Date_) values( 3000, '2020-03-01');
+insert into transactions3(Amount,Date_) values( 2000, '2020-02-01');
+insert into transactions3(Amount,Date_) values( 1000, '2020-01-01');
+
+--Total balence in the account
+
+
+select * from transactions3;
+
+--Find the balence in the account
+
+select sum(Amount) from transactions3;
+
+--Find the total balance in the year 2020 in transaction table 3 assume that we are charged for a payment o 5 INr every month
+
+select sum(Amount)-12*5 as Availabel_Blence from transactions3;
